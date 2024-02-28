@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="icon.png" type="image/x-icon">
+    <title>Temperature Convert</title>
+    <style>
+        *{
+            padding: 0px;
+            margin: 0px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            min-height: 350px;
+            min-width: 210px;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+        input{
+            padding: 8px 15px;
+            margin-right: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        select{
+            padding: 8px 15px;
+        }
+
+        form{
+            max-width: 321px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        form > div{
+            margin-bottom: 12px;
+            display: flex;
+        }
+
+        h1{
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        #temperature_Convert_Button{
+            width: 100%;
+            background-color: black;
+            color: white;
+        }
+        #temperature_Convert_Button:disabled{
+            opacity: 0.7;
+        }
+
+        @media screen and (max-width: 380px) {
+            form{
+                margin: 20px;
+            }
+            form > div{
+                flex-direction: column;
+            }
+
+            input{
+                margin-bottom: 10px;
+                margin-right: 0px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    
+    <form>
+        <h1>Temp Converter</h1>
+        <div>
+            <input id="temperature_input" type="number">
+    
+            <select id="temperature_input_selection">
+                <option value="Celsius" selected>Celsius</option>
+                <option value="Fahrenheit">Fahrenheit</option>
+                <option value="Kelvin">Kelvin</option>
+            </select>
+    
+        </div>
+    
+        <div>
+    
+            <input id="temperature_output" readonly type="number">
+    
+            <select id="temperature_output_selection">
+                <option value="Celsius">Celsius</option>
+                <option value="Fahrenheit" selected>Fahrenheit</option>
+                <option value="Kelvin">Kelvin</option>
+            </select>
+        </div>
+    
+        <input type="submit" value="Convert" id="temperature_Convert_Button" disabled>
+    </form>
+
+
+    <script>
+        let temperature_input = document.getElementById("temperature_input");
+        let temperature_input_selection = document.getElementById("temperature_input_selection");
+
+        let temperature_output = document.getElementById("temperature_output");
+        let temperature_output_selection = document.getElementById("temperature_output_selection");
+
+        let temperature_Convert_Button = document.getElementById("temperature_Convert_Button");
+
+        temperature_input_selection.addEventListener("change", () => {
+            let temperature_input_selection_value = temperature_input_selection.value;
+
+            let output_select_childrens = temperature_output_selection.children;
+
+            temperature_output_selection.value = "";
+
+            for (let i = 0; i < output_select_childrens.length; i++) {
+                output_select_childrens[i].disabled = false;
+                if (temperature_input_selection_value == output_select_childrens[i].value) {
+                    output_select_childrens[i].disabled = true;
+                }
+            }
+
+        })
+
+        temperature_input.addEventListener("input",()=>{
+            if(temperature_input.value != ""){
+                temperature_Convert_Button.disabled = false;
+                temperature_output.value = "";
+            }else{
+                temperature_Convert_Button.disabled = true;
+            }
+        })
+
+        temperature_Convert_Button.addEventListener("click", (event) => {
+            event.preventDefault();
+            let input = (Number)(temperature_input.value);
+            let temperature_input_type = temperature_input_selection.value;
+            let temperature_output_type = temperature_output_selection.value;
+            let output = 0;
+
+            // Celsius -> Fahrenheit
+            // (input * 9/5) + 32;
+            if(temperature_input_type == "Celsius" &&  temperature_output_type == "Fahrenheit"){
+                output = (input * 9/5) + 32;
+            }
+            // Celsius -> Kelvin
+            // input + 273.15;
+            else if(temperature_input_type == "Celsius" &&  temperature_output_type == "Kelvin"){
+                output = input + 273.15;
+            }
+
+            // Fahrenheit -> Celsius
+            // (input - 32) * 5/9
+            else if(temperature_input_type == "Fahrenheit" &&  temperature_output_type == "Celsius"){
+                output = (input - 32) * 5/9;
+            }
+            // Fahrenheit -> Kelvin
+            // (input - 32) * 5/9 + 273.15;
+            else if(temperature_input_type == "Fahrenheit" &&  temperature_output_type == "Kelvin"){
+                output = (input - 32) * 5/9 + 273.15;
+            }
+            
+            // Kelvin -> Celsius
+            // (input - 273.15);
+            else if(temperature_input_type == "Kelvin" &&  temperature_output_type == "Celsius"){
+                output = (input - 273.15);
+            }
+            // Kelvin -> Fahrenheit
+            // (input - 273.15) * 9/5 + 32;
+            else if(temperature_input_type == "Kelvin" &&  temperature_output_type == "Fahrenheit"){
+                output = (input - 273.15) * 9/5 + 32;
+            }
+
+            temperature_output.value = output;
+        })
+    </script>
+</body>
+
+</html>
